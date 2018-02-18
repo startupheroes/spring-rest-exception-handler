@@ -13,7 +13,7 @@
 
     <groupId>es.startuphero</groupId>
     <artifactId>spring-rest-exception-handler</artifactId>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.6.0</version>
     <packaging>jar</packaging>
 
     <name>Spring REST Exception Handler</name>
@@ -62,7 +62,7 @@
     <scm>
         <url>http://github.com/startupheroes/spring-rest-exception-handler</url>
         <connection>scm:git:git@github.com:startupheroes/spring-rest-exception-handler.git</connection>
-      <tag>HEAD</tag>
+      <tag>spring-rest-exception-handler-1.6.0</tag>
   </scm>
 
     <issueManagement>
