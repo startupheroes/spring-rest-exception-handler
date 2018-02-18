@@ -22,8 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.http.HttpStatus;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,7 +35,6 @@ import java.net.URI;
 @NoArgsConstructor
 @ToString(exclude="detail")
 @JsonInclude(Include.NON_EMPTY) //for Jackson 2.x
-@JsonSerialize(include=Inclusion.NON_EMPTY) //for Jackson 1.x
 @XmlRootElement(name="problem") //for JAXB
 public class ErrorMessage implements Serializable {
 

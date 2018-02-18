@@ -15,9 +15,19 @@
  */
 package cz.jirutka.spring.exhandler;
 
-import cz.jirutka.spring.exhandler.handlers.*;
+import cz.jirutka.spring.exhandler.handlers.AbstractRestExceptionHandler;
+import cz.jirutka.spring.exhandler.handlers.ConstraintViolationExceptionHandler;
+import cz.jirutka.spring.exhandler.handlers.ErrorMessageRestExceptionHandler;
+import cz.jirutka.spring.exhandler.handlers.HttpMediaTypeNotSupportedExceptionHandler;
+import cz.jirutka.spring.exhandler.handlers.HttpRequestMethodNotSupportedExceptionHandler;
+import cz.jirutka.spring.exhandler.handlers.MethodArgumentNotValidExceptionHandler;
+import cz.jirutka.spring.exhandler.handlers.RestExceptionHandler;
 import cz.jirutka.spring.exhandler.interpolators.MessageInterpolator;
 import cz.jirutka.spring.exhandler.interpolators.MessageInterpolatorAware;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.ConstraintViolationException;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -40,16 +50,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
-
-import javax.validation.ConstraintViolationException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import static cz.jirutka.spring.exhandler.MapUtils.putAllIfAbsent;
 import static lombok.AccessLevel.NONE;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.util.StringUtils.hasText;
 
 @Setter
@@ -232,7 +241,6 @@ public class RestHandlerExceptionResolverBuilder {
 
         Map<Class, RestExceptionHandler> map = new HashMap<>();
 
-        map.put( NoSuchRequestHandlingMethodException.class, new NoSuchRequestHandlingMethodExceptionHandler() );
         map.put( HttpRequestMethodNotSupportedException.class, new HttpRequestMethodNotSupportedExceptionHandler() );
         map.put( HttpMediaTypeNotSupportedException.class, new HttpMediaTypeNotSupportedExceptionHandler() );
         map.put( MethodArgumentNotValidException.class, new MethodArgumentNotValidExceptionHandler() );
@@ -249,15 +257,9 @@ public class RestHandlerExceptionResolverBuilder {
         addHandlerTo( map, HttpMessageNotReadableException.class, UNPROCESSABLE_ENTITY );
         addHandlerTo( map, HttpMessageNotWritableException.class, INTERNAL_SERVER_ERROR );
         addHandlerTo( map, MissingServletRequestPartException.class, BAD_REQUEST );
-        addHandlerTo(map, Exception.class, INTERNAL_SERVER_ERROR);
+        addHandlerTo( map, Exception.class, INTERNAL_SERVER_ERROR);
+        addHandlerTo( map, NoHandlerFoundException.class, NOT_FOUND);
 
-        // this class didn't exist before Spring 4.0
-        try {
-            Class clazz = Class.forName("org.springframework.web.servlet.NoHandlerFoundException");
-            addHandlerTo(map, clazz, NOT_FOUND);
-        } catch (ClassNotFoundException ex) {
-            // ignore
-        }
         return map;
     }
 
