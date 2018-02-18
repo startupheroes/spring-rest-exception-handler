@@ -61,8 +61,8 @@
     </licenses>
 
     <scm>
-        <url>http://github.com/jirutka/spring-rest-exception-handler</url>
-        <connection>scm:git:git@github.com:jirutka/spring-rest-exception-handler.git</connection>
+        <url>http://github.com/startupheroes/spring-rest-exception-handler</url>
+        <connection>scm:git:git@github.com:startupheroes/spring-rest-exception-handler.git</connection>
     </scm>
 
     <issueManagement>
